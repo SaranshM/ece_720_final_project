@@ -1,0 +1,48 @@
+name: Smoker Status Prediction - ML Pipeline CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11.7' 
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Unit Tests
+      run: python -m unittest discover -s src/tests/unit
+    - name: Run Integration Tests
+      run: python -m unittest discover -s src/tests/integration
+    - name: Run System Tests
+      run: python -m unittest discover -s src/tests/system
+    - name: Run Quality Assurance/User Acceptance Tests
+      run: python -m unittest discover -s src/tests/quality-assurance  
+
+  train-model:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11.7'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run train pipeline
+      run: python src/pipeline/train_pipeline.py 
+
