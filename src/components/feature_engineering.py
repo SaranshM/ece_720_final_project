@@ -62,7 +62,21 @@ class FeatureEngineering(BaseEstimator, TransformerMixin):
         
         # Step 5: Encoding Categorical Variables (including binned 'age_group')
         # Note: Ensure 'gender', 'oral', 'tartar', 'age_group' are the categorical columns in your dataset needing encoding
-        X = pd.get_dummies(X, columns=['gender', 'oral', 'tartar', 'age_group'])
+        X = pd.get_dummies(X, columns=['age_group'])
+
+        # Gender
+        X['gender_M'] = (X['gender'] == 'M').astype(int)
+        X['gender_F'] = (X['gender'] == 'F').astype(int)
+        
+        # Oral
+        X['oral_Y'] = (X['oral'] == 'Y').astype(int)
+        X['oral_N'] = (X['oral'] == 'N').astype(int)
+        
+        # Tartar
+        X['tartar_Y'] = (X['tartar'] == 'Y').astype(int)
+        X['tartar_N'] = (X['tartar'] == 'N').astype(int)
+
+        X = X.drop(["gender","oral","tartar"], axis = 1)
         
         # Step 6 & 7: Creating Indexes and Interactions
         X['health_risk_index'] = (X['log_triglyceride'] + X['log_cholesterol'] + X['log_ast'] + X['log_alt'] + X['log_gtp']) / 5
@@ -78,4 +92,5 @@ class FeatureEngineering(BaseEstimator, TransformerMixin):
         if self.float_cols is not None:  # Check to prevent scaling of non-existent columns
             X[self.float_cols] = self.scaler.transform(X[self.float_cols])
         
+  
         return X

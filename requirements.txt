@@ -6,4 +6,5 @@ scikit-learn
 dataclasses
 dill
 coverage
--e .
+flask
+# -e .
