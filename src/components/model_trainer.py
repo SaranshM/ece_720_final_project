@@ -32,9 +32,6 @@ class ModelTrainer:
             Y_train = Y_train.astype('int')
             Y_test = Y_test.astype('int')
 
-            print("[ModelTrainer] X-train after split:\n")
-            print(X_train[0])
-
             model = self.load_model()
 
             model.fit(X_train, Y_train)
@@ -44,5 +41,6 @@ class ModelTrainer:
                 obj = model
             )
             
+            return (X_train, X_test, Y_train, Y_test)
         except Exception as e:
             raise CustomException(e, sys)

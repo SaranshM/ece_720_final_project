@@ -40,6 +40,8 @@ jobs:
       run: python -m unittest discover -s src/tests/system
     - name: Run Quality Assurance/User Acceptance Tests
       run: python -m unittest discover -s src/tests/quality-assurance  
+    - name: Test Coverage
+      run: coverage report --fail-under=90
 
   train-model:
     needs: run-tests

@@ -10,6 +10,8 @@ from src.components.data_transformation import DataTransformation
 from src.components.model_trainer import ModelTrainer
 import os
 
+from src.utils import evaluate_model
+
 class TestModelOverfitting(unittest.TestCase):
 
     @classmethod
@@ -66,6 +68,15 @@ class TestModelOverfitting(unittest.TestCase):
         test_accuracy = accuracy_score(self.Y_test, y_pred_test)
         
         self.assertLessEqual(training_accuracy - test_accuracy, 0.2, "Model may be overfitting. Difference in train and test accuracy is too high.")
+    
+    def test_model_performance(self):
+        report = evaluate_model(X_train=self.X_train, X_test=self.X_test, Y_train=self.Y_train, Y_test=self.Y_test, model=self.model)
+        # @todo: Update metrics
+        self.assertGreaterEqual(report['Accuracy'], 0.75, "Accuracy is below 80%")
+        self.assertGreaterEqual(report['F1 Score'], 0.75, "F1 Score is below 80%")
+        self.assertGreaterEqual(report['Precision'], 0.75, "Precision is below 80%")
+        self.assertGreaterEqual(report['Recall'], 0.75, "Recall is below 80%")
+        self.assertGreaterEqual(report['ROC AUC Score'], 0.75, "ROC AUC Score is below 80%")
 
 
     def tearDown(self):
